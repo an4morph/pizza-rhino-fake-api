@@ -1,34 +1,29 @@
-# Фейковый API для обучения на практике авторизации/регистрации при помощи токена
+# Fake api for pizza delivery app
 
-### Запуск
+### Start as dev
 
 ```sh
 npm start
 ```
 
 
-Для установки пакетов, перед запуском ипользуйте 
+Before first start - install all dependencies
 
 ```sh
 npm install
 ```
 
-Запускается на порту 5432
+Run at 1717 port
 
+Auth header: `X-Auth:  ${your_token}`
 
-### Роутинг
+### Routes
 
-> `GET` /data
-
-отдает вам текст, если вы авторизованы
-
-для подтверждения авторизации отправляйте в запросе заголовок: `X-Auth:  ${your_token}`
+> `GET` /me
 
 
 > `POST` /login
 
-вход 
-
 ```sh
 body: {
   username: string (required),
@@ -37,23 +32,20 @@ body: {
 ```
 
 
-> `POST` /signin
+> `POST` /signup
 
 ```sh
 body: {
-  firstname: string (required),
-  lastname: string (required),
   username: string (required),
   password: string (required),
 }
 ```
 
-регистрация
-
-
-#### По умолчанию есть зарегистрированный пользователь
+> `POST` /change-password
 
 ```sh
-username: 'admin'
-password: '1234'
+body: {
+  id: string (required),
+  newPassword: string (required),
+}
 ```
