@@ -1,0 +1,1 @@
+module.exports = (res, status, text) => res.status(status).json(text).end()
