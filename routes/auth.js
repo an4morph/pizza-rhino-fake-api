@@ -1,52 +1,48 @@
 const db = require('../db')
 const error = require('../services/error')
 const shortid = require('shortid')
-const validation = require('../services/validation')
 
 const login = (req, res) => {
-  const { username, password } = req.body
-  if (!username) return error(res, 400, 'username attribute is required')
-  if (!password) return error(res, 400, 'password attribute is required')
+  if (!req.body.username) return error(res, 400, 'username attribute is required')
+  if (!req.body.password) return error(res, 400, 'password attribute is required')
 
-  const user = db.get('users').find({ logData: { username, password } }).value()
+  const loginData = { 
+    username: req.body.username,
+    password: req.body.password,
+  }
+
+  const user = db.get('users').find(loginData).value()
   if (!user) return error(res, 403, 'incorrect login data')
 
-  res.send({ token: user.token, data: user.response })
+  const { username, id, token } = user
+  res.send({ username, id, token })
 }
 
 const signup = (req, res) => {
-  const { username, password } = req.body
-  if (!username) return error(res, 400, 'username attribute is required')
-  if (username.length < 3) return error(res, 400, 'password should me more than 3 characters')
-  if (username.length > 100) return error(res, 400, 'too long data')
-  validation.password(password, res)
+  if (!req.body.username) return error(res, 400, 'username attribute is required')
+  if (!req.body.password) return error(res, 400, 'password attribute is required')
   
+  const isUserExists = !!db.get('users').find({ username: req.body.username }).value()
+  if (isUserExists) return error(res, 400, 'user with this username already exists')
 
-  const existed = db.get('users').find({ data: { username } }).value()
-  if (existed) return error(res, 400, 'user with this username already exists')
-
-  const data = {
+  const newUser = {
     token: `token_${shortid.generate()}`,
-    response: { id:  shortid.generate(), username },
-    logData: { username, password }
+    id:  shortid.generate(),
+    username: req.body.username
   }
 
-  db.get('users').push(data).write()
-
-  const user = db.get('users').find({ logData: { username, password } }).value()
-  res.send({ token: user.token, data: user.response })
+  db.get('users').push({ ...newUser, password: req.body.password }).write()
+  res.send(newUser)
 }
 
 const changePassword = (req, res) => {
-  const token = req.get('X-Auth')
-  const user = db.get('users').find({ token })
+  const user = db.get('users').find({ token: req.get('X-Auth') })
   if (!user.value()) return error(res, 403, 'Access is denied')
   
   const { newPassword } = req.body
   if (!newPassword) return error(res, 400, 'newPassword attribute is required')
-  validation.password(newPassword, res)
 
-  user.assign({ logData: { password: newPassword } }).write()
+  user.assign({ password: newPassword }).write()
   res.status(200).json('success').end()
 }
 
