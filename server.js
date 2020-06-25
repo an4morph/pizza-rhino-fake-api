@@ -4,7 +4,7 @@ const port = 1717
 const defaultData = require('./defaultData')
 const cors = require('cors')
 
-const db = require('./services/db')
+const db = require('./db')
 const error = require('./services/error')
 const authRoutes = require('./routes/auth')
 

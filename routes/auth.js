@@ -1,4 +1,4 @@
-const db = require('../services/db')
+const db = require('../db')
 const error = require('../services/error')
 const shortid = require('shortid')
 const validation = require('../services/validation')
@@ -41,11 +41,9 @@ const changePassword = (req, res) => {
   const token = req.get('X-Auth')
   const user = db.get('users').find({ token })
   if (!user.value()) return error(res, 403, 'Access is denied')
-
-  const { id, newPassword } = req.body
-  if (!id) return error(res, 400, 'id attribute is required')
-  const isExist = user.value()
-  if (!isExist) return error(res, 400, 'user with this id don\'t exists')
+  
+  const { newPassword } = req.body
+  if (!newPassword) return error(res, 400, 'newPassword attribute is required')
   validation.password(newPassword, res)
 
   user.assign({ logData: { password: newPassword } }).write()
