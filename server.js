@@ -21,7 +21,6 @@ app.get('/me', (req, res) => {
   res.send(user.response)
 })
 
-
 app.post('/login', authRoutes.login)
 app.post('/signup', authRoutes.signup)
 app.post('/change-password', authRoutes.changePassword)
@@ -29,6 +28,16 @@ app.post('/change-password', authRoutes.changePassword)
 app.get('/pizza', (req, res) => {
   const pizza = db.get('pizza')
   res.send(pizza)
+})
+
+app.get('/drinks', (req, res) => {
+  const drinks = db.get('drinks')
+  res.send(drinks)
+})
+
+app.get('/salads', (req, res) => {
+  const salads = db.get('salads')
+  res.send(salads)
 })
 
 
