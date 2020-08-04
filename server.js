@@ -13,14 +13,7 @@ db.defaults(defaultData).write()
 
 app.use(express.json()) 
 
-app.get('/me', (req, res) => {
-  const token = req.get('X-Auth')
-  const user = db.get('users').find({ token }).value()
-  if (!user) return error(res, 403, 'Access is denied')
-
-  res.send(user.response)
-})
-
+app.get('/me', authRoutes.getMe)
 app.post('/login', authRoutes.login)
 app.post('/signup', authRoutes.signup)
 app.post('/change-password', authRoutes.changePassword)
