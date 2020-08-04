@@ -46,7 +46,7 @@ const changePassword = (req, res) => {
   res.status(200).json('success').end()
 }
 
-const getMe = (res, req) => {
+const getMe = (req, res) => {
   const token = req.get('X-Auth')
   const user = db.get('users').find({ token }).value()
   if (!user) return error(res, 403, 'Access is denied')
