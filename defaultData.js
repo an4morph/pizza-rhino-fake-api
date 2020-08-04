@@ -57,7 +57,7 @@ module.exports = {
       token: 'token_bhje73bkj38jlds9',
       id:  'fsdu274dHsw',
       username: 'admin',
-      password: '1234',
+      password: '12341234',
     }
   ],
   currency: [
